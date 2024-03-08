@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps - India State Markers</title>
+    <style>
+        #map {
+            height: 1000px;
+            width: 1000px;
+        }
+/* 
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+}
+ body {
+
+  font-family: Merriweather Sans;
+} 
+
+/* .container {
+  width: 200px;
+} */
+
+body {
+
+font-family: "Merriweather Sans";
+} 
+.dropdown {
+  width: 30%;
+  position: relative;
+  color: white;
+}
+
+/* .dropdown .label {
+  color: #2b3044;
+  margin-bottom: 5px;
+} */
+
+.dropdown .select {
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 5px;
+  display: flex;
+  padding: 15px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dropdown .select .selected {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: black;
+}
+
+.dropdown .select .selected.placeholder {
+  letter-spacing: -0.75px;
+color: #000000;
+opacity: 1;
+font-size: 30px;
+line-height: 50px;
+font-weight: 300;
+font-family:  "Merriweather Sans";
+font-style: normal;
+}
+
+.dropdown .select .caret {
+  margin-left: 10px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid black;
+  transition: 0.3s;
+}
+
+.dropdown .menu {
+    visibility: hidden;
+    background-color: white;
+    border-radius: 22px;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s;
+    z-index: 1;
+    color: black;
+    border: 1px solid #707070;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dropdown .menu li {
+    cursor: pointer;
+    padding: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    border-bottom: 1px solid #707070;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.dropdown .menu li:last-child {
+    border-bottom: none; 
+}
+
+.dropdown .menu li:hover {
+  background-color: #E2E2E2;
+}
+
+.dropdown .menu-open {
+  visibility: visible;
+  opacity: 1;
+  padding: 0;
+}
+
+.caret-rotate {
+  transform: rotate(180deg);
+}
+
+.active {
+  background-color: #E2E2E2;
+}
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+        <div class='dropdown'>
+          <div class='select'>
+            <div class='selected placeholder'>Causes of Death</div>
+            <div class='caret'></div>
+          </div>
+          <ul class='menu'>
+            <li id="elephant-tab">By Humans to Elephants</li>
+            <li id="human-tab">Human death</li>
+            <li id="tiger-tab">Tiger death</li>
+            <li id="elephant-death-tab">Elephants killed by electrocution</li>
+            
+          </ul>
+        </div>
+      
+
+    <div id="map"></div>
+
+    <script>
+        function initMap() {
+            var indiaCenter = { lat: 22.522243, lng: 79.376927 };
+
+            // Create the map with center and zoom level
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: indiaCenter,
+                zoom: 5,
+                styles:[
+                {
+                        "featureType": "administrative",
+                        "elementType": "labels.text",
+                        "stylers": [
+                            { "visibility": "off" }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative.country",
+                        "elementType": "labels.text",
+                        "stylers": [
+                            { "visibility": "off" }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative.province",
+                        "elementType": "labels.text",
+                        "stylers": [
+                            { "visibility": "off" }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative.locality",
+                        "elementType": "labels.text",
+                        "stylers": [
+                            { "visibility": "off" }
+                        ]
+                    },
+                       
+                        {
+                            "featureType": "landscape",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "saturation": -100
+                                },
+                                {
+                                    "lightness": 100
+                                },
+                                {
+                                    "visibility": "on"
+                                },
+                                {
+                                    "color": "#ffffff"
+                                }
+                            ]
+                        },
+                     
+                        {
+                            "featureType": "road",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "saturation": "-100"
+                                },
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road.highway",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road.arterial",
+                            "elementType": "all",
+                            "stylers": [
+                                {
+                                    "lightness": "100"
+                                },
+                                {
+                                    "visibility": "on"
+                                },
+                                {
+                                    "colour":" #b00020"
+                                },
+                            ]
+                        },
+                       
+                        {
+                            "featureType": "water",
+                            "elementType": "geometry",
+                            "stylers": [
+                                {
+                                    "hue": "#E2E2E2"
+                                },
+                                {
+                                    "saturation": -97
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "water",
+                            "elementType": "labels",
+                            "stylers": [
+                                {
+                                    "lightness": -25
+                                },
+                                {
+                                    "saturation": -100
+                                }
+                            ]
+                        }
+              ]
+               
+            });
+
+            // Define state locations with their respective coordinates
+            var stateLocations = [
+        
+                {   
+                    name: 'Andhra Pradesh', 
+                    lat: 14.968646656806602, 
+                    lng: 78.96600591839872,
+                    type: "elephant",
+                    year: "2019-20",
+                    deathElephant:"4",
+                    deathHuman:"5",
+                    year1:"2020-21",
+                    death1Elephant:"6",
+                    death1Human:"10",
+                    year2:"2021-22",
+                    death2Elephant:"NR",
+                    death2Human:"15",
+                },
+                {   
+                    name: 'Arunachal Pradesh', 
+                    lat: 28.472172399253676, 
+                    lng: 94.9490713289352,
+                    type: "tiger",
+                },
+                {   
+                    name: 'Arunachal Pradesh', 
+                    lat: 28.472172399253676, 
+                    lng: 94.9490713289352,
+                    type: "elephant",
+                },
+                {   
+                    name: 'Assam', 
+                    lat: 26.569771967463982,
+                    lng: 92.5991913432878,
+                    type: "elephantDeath",
+                },
+                {   
+                    name: 'Chhattisgarh', 
+                    lat: 241808024847398, 
+                    lng: 81.85457443072846,
+                    type: "elephant",
+                },
+                {   
+                    name: 'Jharkhand', 
+                    lat: 23.711861416455143, 
+                    lng: 85.18598243108264,
+                    type: "tiger",
+                },
+                {   
+                    name: 'Karnataka', 
+                    lat: 14.659772685235513,
+                    lng:  75.49259807473385,
+                    type: "human",
+                },
+                {   
+                    name: 'Kerala', 
+                    lat: 9.35638225419031,
+                    lng: 76.87926875261714
+                },
+                {   
+                    name: 'Maharashtra', 
+                    lat: 19.474239836836126,
+                    lng:  75.53526697395888
+                },
+                {   
+                    name: 'Meghalaya', 
+                    lat: 25.631735925337882,
+                    lng:  90.98126489788608
+                },
+                {   
+                    name: 'Odisha', 
+                    lat: 20.54107481330305, 
+                    lng: 84.09265053655542
+                },
+
+                {   
+                    name: 'Tamil Nadu', 
+                    lat: 11.567456721222184,
+                    lng: 78.65503474050178
+                },
+                {   
+                    name: 'Tripura', 
+                    lat: 23.705604575672353, 
+                    lng:  91.71715776994346
+                },
+                {   
+                    name: 'Uttar Pradesh', 
+                    lat: 27.780612592046623,
+                    lng:  79.75806259997891
+                },
+                {   
+                    name: 'West Bengal', 
+                    lat: 23.005991251027726, 
+                    lng: 87.08745927391392
+                },
+                 
+                
+            ];
+
+
+            var icons = {
+                elephant: {
+                    icon: 'assets/images/elephant-icon-new.svg',
+                },
+                tiger: {
+                    icon: 'assets/images/tiger-icon-new.svg',
+                },
+                human: {
+                    icon: 'assets/images/human-icon.svg',
+                },
+                elephantDeath: {
+                    icon: 'assets/images/elephant-icon-new.svg',
+                },
+            };
+
+
+            function updateMarkers(type) {
+                stateLocations.forEach(function(state) {
+                    if (state.type === type || !type) {
+                        if (type === 'elephant') {
+                            state.marker.setIcon(icons.elephant.icon);
+                            state.marker.setVisible(true); // Set marker visible
+                        } else if (type === 'human') {
+                            state.marker.setIcon(icons.human.icon);
+                            state.marker.setVisible(true); // Set marker visible
+                        }
+                        
+                        else if (type === 'tiger') {
+                            state.marker.setIcon(icons.tiger.icon);
+                            state.marker.setVisible(true); // Set marker visible
+                        }  else if (type === 'elephantDeath') {
+                            state.marker.setIcon(icons.elephantDeath.icon);
+                            state.marker.setVisible(true); // Set marker visible
+                        }
+                        else {
+                            state.marker.setIcon("assets/images/blinker.svg"); // Set default icon
+                            state.marker.setVisible(true); // Set marker visible
+                        }
+                    } else {
+                        state.marker.setVisible(false); // Set marker invisible
+                    }
+                });
+            }
+
+            // Add markers for each state location
+            stateLocations.forEach(function(state) {
+
+                state.marker = new google.maps.Marker({
+                    position: {lat: state.lat, lng: state.lng},
+                    map: map,
+                    title: state.name,
+                    icon:"assets/images/blinker.svg",
+                    animation: google.maps.Animation.DROP
+                });
+
+                var infoWindow = new google.maps.InfoWindow();
+
+                state.marker.addListener('click', function() {
+                    var tableData = [
+                        { key: 'Year', value: 'Elephant Deaths', value1: 'Human Deaths' },
+                        { key: state.year, value: state.deathElephant, value1: state.deathHuman },
+                        { key: state.year1, value: state.death1Elephant, value1: state.death1Human },
+                        { key: state.year2, value: state.death2Elephant, value1: state.death2Human }
+                    ];
+
+                    var tableHtml = '<h3>' + state.name + '</h3><table>';
+                    tableData.forEach(function(row) {
+                        tableHtml += '<tr><td>' + row.key + '</td><td>' + row.value + '</td><td>' + row.value1 + '</td></tr>';
+                    });
+                    tableHtml += '</table>';
+
+                    infoWindow.setContent(tableHtml);
+                    infoWindow.open(map, state.marker);
+                });
+
+            });
+
+            
+                    
+            //             function updateMarkers(type) {
+            //                 stateLocations.forEach(function(state) {
+            //                     if (state.type === type || !type) {
+            //                         if (type === 'elephant') {
+            //                             state.marker.setIcon(icons.elephant.icon);
+            //                         } else if (type === 'tiger') {
+            //                             state.marker.setIcon(icons.tiger.icon);
+            //                         } else {
+            //                             state.marker.setIcon("assets/images/blinker.svg"); // Set default icon
+            //                         }
+            //                         state.marker.setVisible(true);
+            //                     } else {
+            //                         state.marker.setVisible(false);
+            //                     }
+            //                 });
+            //             }
+
+
+            const dropdowns = document.querySelectorAll(".dropdown");
+
+            dropdowns.forEach((dropdown) => {
+                const select = dropdown.querySelector(".select");
+                const caret = dropdown.querySelector(".caret");
+                const menu = dropdown.querySelector(".menu");
+                const options = dropdown.querySelectorAll(".menu li");
+                const selected = dropdown.querySelector(".selected");
+
+                select.addEventListener("click", () => {
+                    caret.classList.toggle("caret-rotate");
+                    menu.classList.toggle("menu-open");
+                });
+
+                options.forEach((option) => {
+                    option.addEventListener("click", () => {
+                        selected.classList.remove("placeholder");
+                        selected.innerText = option.innerText;
+                        caret.classList.remove("caret-rotate");
+                        menu.classList.remove("menu-open");
+                        options.forEach((option) => option.classList.remove("active"));
+                        option.classList.add("active");
+
+                        // Call your updateMarkers function with the appropriate type
+                        if (option.id === "elephant-tab") {
+                            updateMarkers('elephant');
+                        } else if (option.id === "human-tab") {
+                            updateMarkers('human');
+                        } else if (option.id === "tiger-tab") {
+                            updateMarkers('tiger');
+                        }
+                        else if (option.id === "elephant-death-tab") {
+                            updateMarkers('elephantDeath');
+                        }
+                    });
+                });
+            });
+
+            // const dropdowns = document.querySelectorAll(".dropdown");
+
+            // dropdowns.forEach((dropdown) => {
+            //   const select = document.querySelector(".select");
+            //   const caret = document.querySelector(".caret");
+            //   const menu = document.querySelector(".menu");
+            //   const options = document.querySelectorAll(".menu li");
+            //   const selected = document.querySelector(".selected");
+            //   select.addEventListener("click", () => {
+            //     caret.classList.toggle("caret-rotate");
+            //     menu.classList.toggle("menu-open");
+            //   });
+
+            //   options.forEach((option) => {
+            //     option.addEventListener("click", () => {
+            //       selected.classList.remove("placeholder");
+            //       selected.innerText = option.innerText;
+            //       caret.classList.remove("caret-rotate");
+            //       menu.classList.remove("menu-open");
+            //       options.forEach((option) => option.classList.remove("active"));
+            //       option.classList.add("active");
+            //     });
+            //   });
+            // });
+
+        }
+       
+
+    </script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5QBcdxytFM_pnUhS-4pjoOlPzEfHUgqQ&callback=initMap"></script>
+</body>
+</html>
+
+ 
+
